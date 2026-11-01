@@ -46,7 +46,8 @@ npm run review -- SONG --lineup YCY   # the show for a song, drawn and summed up
 - `src/viewer/`: the 3D preview (`playback.ts` plays a show file as each car would). The cars are Tesla's
   own models from the Tesla app only (`car/appBody.ts`, served from the `car-models` release). Don't add
   hand-built or approximated car models.
-- `src/components/ui/`: shadcn/ui as the CLI writes it. Don't edit; theme in `src/index.css`.
+- `src/components/ui/`: shadcn/ui as the CLI writes it (`npx shadcn@latest add NAME`), and its stylesheet
+  (`shadcn.css`). Don't edit; theme in `src/index.css`.
 - `tools/export_models.py`, `tools/export_car_models.py`: make the two releases (`uv run`).
 - `tools/review/`: the show review tool (pictures, a summary with the ARC table, a film of the preview).
 

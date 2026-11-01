@@ -33,7 +33,7 @@ tool and regenerating the test fixtures need them too.
 | `src/engine/listen/` | The listening: decoding helpers and resampling, the librosa subset, beat-this and basic-pitch on ONNX Runtime Web (`infer.ts` picks the backend). |
 | `src/viewer/` | The 3D preview (three.js): `playback.ts` plays a show file as each car would, `car/appBody.ts` draws Tesla's app models, `rig.ts` lights and moves one car, `viewer.ts` the scene, `car/lot.ts` the parking lot. |
 | `src/app/` | The page: the 3D stage, the panels, the worker that makes a show (`show.worker.ts`), the WAV and the ZIP. |
-| `src/components/ui/` | shadcn/ui components, as the shadcn CLI writes them. Don't edit them; restyle through the theme in `src/index.css`. |
+| `src/components/ui/` | shadcn/ui components, as the shadcn CLI writes them (`npx shadcn@latest add NAME`, not installed), and shadcn's stylesheet (`shadcn.css`). Don't edit them; restyle through the theme in `src/index.css`. |
 | `tools/` | The two scripts that make the releases (below), and the show review tool (`tools/review/`). |
 | `MOVES.md` | The move catalogue, generated from `catalog.ts`. |
 

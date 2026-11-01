@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "./components/ui/shadcn.css";
 @import "@fontsource-variable/geist";
 
 /* Dark only: the shadcn components' dark styles apply everywhere (index.html sets the class). */
