@@ -1,0 +1,21 @@
+name: Bug report
+description: Something broke or looks wrong
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How to reproduce
+      description: The browser and device, the lineup, and the song's format, length and style (not the recording itself)
+  - type: textarea
+    id: log
+    attributes:
+      label: Message
+      description: The message the page showed, or errors from the browser's console
+      render: text

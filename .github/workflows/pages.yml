@@ -1,0 +1,48 @@
+# The site: matthewhager.github.io/carreographer/, built on every push to main.
+# The analysis models (tools/export_models.py), Tesla's car models and the example song come from the
+# repository's "models", "car-models" and "examples" releases (npm run assets), so they never enter the git
+# history.
+name: pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run
+      - name: Download the analysis models, Tesla's car models and the example song
+        run: npm run assets
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

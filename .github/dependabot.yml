@@ -1,0 +1,8 @@
+# The workflows' actions, kept current. npm packages get security updates only (repository settings):
+# a routine bump of, say, onnxruntime-web could change shows, so those are taken by hand and reviewed.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

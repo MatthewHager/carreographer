@@ -1,0 +1,25 @@
+# The app's dependencies and build (GitHub Actions builds the site)
+node_modules
+dist
+
+# The analysis models and Tesla's car models: downloaded from the repository's releases, never committed
+public/models
+
+# The example song the page starts with: downloaded from the "examples" release, never committed
+public/examples
+
+# Local scratch: anything derived from your own recordings stays on your machine
+cache/
+
+# Your recordings, for trying shows: never committed
+songs/
+
+.claude/worktrees/
+.DS_Store
+
+# Local settings and logs
+*.local
+*.log
+
+# The show review tool's output (tools/review)
+review-out/

@@ -1,0 +1,31 @@
+name: Car report
+description: How a show played on your car, against the 3D preview (helps map cars Tesla hasn't documented)
+labels: ["car report"]
+body:
+  - type: input
+    id: car
+    attributes:
+      label: Car
+      description: Model, year, and software version (Controls > Software)
+      placeholder: Model Y Long Range 2025, 2026.32.4
+    validations:
+      required: true
+  - type: input
+    id: lineup
+    attributes:
+      label: Car you picked in the app
+      placeholder: Model Y (2025+)
+  - type: textarea
+    id: lamps
+    attributes:
+      label: Lamps
+      description: Lamps that stayed dark, or lit where the preview showed something else
+  - type: textarea
+    id: motors
+    attributes:
+      label: Motors
+      description: How long the liftgate or frunk took to open and close, and anything that didn't move or stopped part way
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else (sync, interior colours, a video link)

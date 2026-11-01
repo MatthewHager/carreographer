@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Make a show
+    url: https://matthewhager.github.io/carreographer/
+    about: The app itself, in your browser.
+  - name: How it works
+    url: https://github.com/MatthewHager/carreographer/blob/main/docs/HOW_IT_WORKS.md
+    about: How a song becomes a show, and what each car's lamps do.
+  - name: Tesla's light show documentation
+    url: https://github.com/teslamotors/light-show
+    about: Questions about the cars themselves, the FSEQ format or Toybox.
