@@ -66,7 +66,7 @@ uses `src/` as it is, with no build. `npx tsc -p tools/review` type-checks it.
 
 ## The film
 
-`--video` serves `film.html` (the app's own `Viewer`, `CarRig` and `simulate`, with Tesla's car models
+`--video` serves `film.html` (the app's own `Viewer`, `CarRig` and `playback`, with Tesla's car models
 from `public/models/tesla-app/`) with Vite on port 5176 (`REVIEW_PORT` to change it), steps it through the
 stretch one video frame at a time in Playwright's Chromium, screenshots each, and muxes the song under it
 with ffmpeg into `video.mp4`. Stepping keeps every picture on its moment of the show however slowly the
