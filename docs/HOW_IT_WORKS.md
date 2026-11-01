@@ -114,7 +114,7 @@ table below), so no layer has to dodge another and nothing is cleaned up after t
 | Lamps | Where the music beats | Where it flows |
 |---|---|---|
 | signatures and DRLs (a 2025+ Model Y's bar, a truck's side markers) | the moves | the breath |
-| inner beams | the moves; below the peak the pulse's while its hit rings | the moves |
+| inner beams | the moves; below the peak, under a melody move, the pulse's while its hit rings | the moves |
 | outer beams | the moves from drive; at the peak the pulse too | the breath |
 | fogs (a truck's frunk light), turn signals, side markers | the drums; the peak's off-beat sweep on the turns | the breath |
 | tails, brake, plates, rear fog, a truck's bed lights | the bed; the kick on the brake | the breath (tails) |
@@ -136,7 +136,8 @@ for a moment (`Car.lightOver`). The pulse's hold on the inner beams is kept wher
 - **The pulse** (`pulse.ts`), where the beat is clear and the music strikes it: the middle car's inner
   beams on the downbeat when calm, 1 and 3 on the inner beams in a groove, every beat in drive, and at the
   peak every beat on every headlight, every lamp on the 1 and the off-beats sweeping the stage car by car on
-  the amber turns. Each hit decays on the shortest of Tesla's ramps that lasts until the next. **Drops**:
+  the amber turns. Below the peak a beat move (or the motif) keeps the beat itself, so there the pulse
+  leaves it the headlights and its pattern reads from the front. Each hit decays on the shortest of Tesla's ramps that lasts until the next. **Drops**:
   a downbeat where the level lands a step higher and holds, from a build or onto a drum kit, at most one
   per 100 s; through the build the pulse speeds up and spreads from the middle car out, the stage goes
   black for a beat (the show's one deliberate pull-back), and every lamp hits the drop together.

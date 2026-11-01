@@ -86,4 +86,5 @@ export interface Analysis {
   // set while choreographing
   phrases?: Phrase[];
   level?: Float32Array;  // per frame 0..1: how big the show is (level.ts)
+  figures?: { t0: number; t1: number; move: MoveName }[];  // each figure and the move it plays (choreo.ts)
 }

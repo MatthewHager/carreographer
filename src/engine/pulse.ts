@@ -12,9 +12,11 @@
 //
 // Each hit is a bright attack that decays on the shortest of Tesla's ramps (0.5, 1 or 2 s) that lasts until
 // the next hit, the way the drum it follows sounds, so every beat lands as a thump from a glow, never from
-// black. Below the peak, while a hit rings its inner beams are the beat's (ownership, kept by Car.light):
-// where the music strikes most beats, the moves light around them. The other lamps are the moves', so a
-// figure travelling the stage shows over the thump.
+// black. Below the peak it plays only under the moves that don't keep the beat themselves (a beat move or
+// the motif does, and lights the headlights in its own pattern, which an every-car thump would hide); there,
+// while a hit rings its inner beams are the beat's (ownership, kept by Car.light): where the music strikes
+// most beats, the moves light around them. The other lamps are the moves', so a figure travelling the stage
+// shows over the thump.
 // A beat the music doesn't strike gets no hit. Where the beat is unclear (an.beatConfidence under CLEAR, and
 // the tracker not keeping steady time either) the layer plays only the downbeats from drive up, and where
 // the music flows (feel.ts) it isn't there.
@@ -28,6 +30,7 @@
 
 import type { Analysis } from './analysis';
 import * as C from './channels';
+import { BEAT_MOVES } from './catalog';
 import { type Car, centreTruck, LIGHT_LEAD_S } from './car';
 import { flowsAt, steadyAt, struckBeats, struckShare } from './feel';
 import { DRIVE, GROOVE, levelAt, stepOf } from './level';
@@ -36,7 +39,6 @@ import * as M from './moves';
 import { clip } from './np';
 import { barPositions, beatAt, beatLen } from './tempo';
 
-const OWNERS = new Set(['motif']);                 // phrase shapes whose moves own the whole stage
 const CLEAR = 0.6, FAINT = 0.25, SURE = 0.9;       // how clear the beat is (an.beatConfidence): a full pulse,
                                                    // downbeats only, a calm tick
 /** How clear the beat at t is: the listening's beat confidence, or CLEAR where the tracker keeps steady
@@ -56,21 +58,29 @@ const RAMPS: [number, number][] = [[0.5, C.OFF_500], [1.0, C.OFF_1000], [2.0, C.
  * the next hit lands or the ramp ends, whichever is first. */
 interface Hit { t: number; kind: string; own: number; hold: number; ramp: number; end: number }
 
+/** Whether the move playing at t keeps the beat itself (a beat move, or the motif), so the headlights are
+ * its own: a phrase playing a move of its own, else its figure's move. */
+function movesKeepBeat(an: Analysis, t: number): boolean {
+  const at = (x: { t0: number; t1: number }) => t >= x.t0 - 0.05 && t < x.t1;
+  const fig = an.figures?.find(at), ph = an.phrases?.find(at);
+  const move = ph?.move && ph.move !== fig?.move ? ph.move : fig?.move;
+  return move === 'motif' || (!!move && BEAT_MOVES.includes(move));
+}
+
 /** Every hit the layer plays (see the module notes). Each decays on the shortest of Tesla's ramps that lasts
  * until the next, so a beat lands while the last still glows. */
 function hits(an: Analysis): Hit[] {
   const b = an.beats, pos = barPositions(an), spans = builds(an), on = struckBeats(an);
   const out: Hit[] = [];
-  const owners = (an.phrases ?? []).filter((ph) => OWNERS.has(ph.gesture));
   for (let i = 0; i < b.length; i++) {
     const t = b[i], next = b[i + 1] ?? t + beatLen(an);
-    if (flowsAt(an, t) || owners.some((ph) => t >= ph.t0 - 0.05 && t < ph.t1)) continue;
+    if (flowsAt(an, t)) continue;
     if (spans.some(([s0, land]) => t >= s0 && t < land)) {                     // the build's own pulse
       out.push({ t, kind: '', own: 3, hold: 0, ramp: 0, end: next });
       continue;
     }
     const s = levelAt(an, t), step = stepOf(s), clear = clearAt(an, t);
-    if (step === 0 || clear < FAINT || !on[i]) continue;
+    if (step === 0 || clear < FAINT || !on[i] || (step < 4 && movesKeepBeat(an, t))) continue;
     const every = clear >= CLEAR ? (step === 2 ? 2 : 1) : 0;    // how often it hits off the 1
     const kind = step === 1 ? (pos[i] === 0 && clear >= SURE ? 'tick' : '')
       : pos[i] === 0 && (step >= 3 || every) ? 'big' : every && pos[i] % every === 0 ? 'beat' : '';

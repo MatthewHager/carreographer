@@ -49,9 +49,10 @@ export function makeShow(heard: Analysis, layout = 'YCY', scheme: SchemeId = DEF
   if (an.beats.length > 8) an.tempo = 60.0 / median(an.beats.slice(1).map((b, i) => b - an.beats[i]));
   an.level = levelCurve(an);
   for (const ph of an.phrases) ph.level = levelOver(an, ph.t0, ph.t1);
+  const figs = planPassages(an);     // before the lineup: the pulse leaves the beat moves the headlights
   const cars = makeLineup(layout, an.nFrames, an.step, silence(an), PULSE.ownership(an));
   BED.apply(cars, an, SCHEMES[scheme]);
-  playPassages(cars, an);
+  for (const [move, group, g0, g1] of figs) drawFigure(cars, an, move, group, g0, g1);
   DRUMS.apply(cars, an);
   PULSE.apply(cars, an);
   MOMENTS.accents(cars, an);
@@ -68,7 +69,7 @@ export function makeShow(heard: Analysis, layout = 'YCY', scheme: SchemeId = DEF
 
 // ---- Passages ----------------------------------------------------------------------------------
 // One move per figure of a passage, so the same music reads as the same idea, and a new move where the music
-// grows or a period ends (playPassages):
+// grows or a period ends (planPassages):
 // Hall of the Mountain King's theme, played eighteen times and growing, follows its notes while it is quiet,
 // then turns into figures that travel the whole stage on the beat as it drives into its climax. A passage
 // runs from one change in the music to the next: a section of the form map that brings back earlier
@@ -196,8 +197,10 @@ function figures(an: Analysis, t0: number, t1: number, own: Phrase[]): [number, 
  * starts (figures), each with its family (a chord held on into the next figure is one swell), each playing
  * the move chooseMove gives it. Material heard again replays its figures' moves, family by family in order:
  * a chorus looks like the chorus, and where it has grown from following the melody to following the beat,
- * like the chorus grown (the moves themselves grow with the level). */
-function playPassages(cars: Car[], an: Analysis) {
+ * like the chorus grown (the moves themselves grow with the level). Each figure is drawn later (drawFigure),
+ * once the pulse knows which moves keep the beat (an.figures). */
+function planPassages(an: Analysis): [CAT.MoveName, Phrase[], number, number][] {
+  const out: [CAT.MoveName, Phrase[], number, number][] = [];
   const used = new Map<CAT.MoveName, number>();
   // per section letter of the form map, the moves its figures played, family by family in order; and per
   // section heard, how many figures of each family it has had
@@ -231,10 +234,13 @@ function playPassages(cars: Car[], an: Analysis) {
         moves[j] ??= move;
         used.set(move, (used.get(move) ?? 0) + 1);
         prev = move;
-        drawFigure(cars, an, move, group, g0, g1);
+        for (const ph of group) ph.move = (fam !== 'flow' && CAT.FOR_GESTURE[ph.gesture]) || move;
+        out.push([move, group, g0, g1]);
       }
     });
   }
+  an.figures = out.map(([move, , t0, t1]) => ({ t0, t1, move }));
+  return out;
 }
 
 /** The move a figure of family `fam` plays: its material's move from before (`replay`) where the music still
@@ -268,7 +274,6 @@ export function chooseMove(an: Analysis, fam: Family, g0: number, g1: number, re
  * melody riding the trucks' bars on top, and a swell or a flowing move holding on under them. */
 function drawFigure(cars: Car[], an: Analysis, move: CAT.MoveName, group: Phrase[], g0: number, g1: number) {
   const fam = familyOf(move);
-  for (const ph of group) ph.move = (fam !== 'flow' && CAT.FOR_GESTURE[ph.gesture]) || move;
   const own = group.filter((q) => q.move !== move || fam === 'note');
   if (fam !== 'note') {
     let a = g0;
